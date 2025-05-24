@@ -11,7 +11,11 @@ Console.WriteLine("Hello from EF Core (Students)");
 - ReleaseDate
 - Rating (0..10)  [Range(0, 10)]
 
-Завантажити необхідні пакети для роботи з EF Core: Microsoft.EntityFrameworkCore, Microsoft.EntityFrameworkCore.SqlServer, Microsoft.EntityFrameworkCore.Tools
+- Завантажити необхідні пакети для роботи з EF Core: 
+    Microsoft.EntityFrameworkCore,
+    Microsoft.EntityFrameworkCore.SqlServer,
+    Microsoft.EntityFrameworkCore.Tools
+
 - Створити клас для контексту бази даних (DbContext) GameDbContext, успадковуючи його від DbContext
  (DbSet<ComputerGame>)
 
@@ -19,6 +23,6 @@ Console.WriteLine("Hello from EF Core (Students)");
 - Створити базу даних, якщо вона не існує
 - Передбачити додвання нових комп'ютерних ігор в базу даних
 - Передбачити видалення комп'ютерних ігор з бази даних  (Remove(....))
-- Передбачити редагування комп'ютерних ігор в базі даних (Update(....))
+- Передбачити редагування комп'ютерних різних характеристик ігор в базі даних 
 
  */
