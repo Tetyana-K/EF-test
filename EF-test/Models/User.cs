@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace EF_test.Models
 {
+    // [Table("NewUsers")] -- якщо хочемо іншу назву таблиці у БД (необов'язково, якщо підходить назва таблиці за домовленостями ( conventions)
     public class User
     {
         /* Id буде первинний ключ (Primary Key) за замовчуванням (на основы домовленостей =conventions). EF Core автоматично розпізнає властивість з назвою Id 
@@ -17,3 +18,5 @@ namespace EF_test.Models
         public string? Email { get; set; } // цій властивості  (за домовленостями, conventions) відповідатиме у таблиці users поле is NULL
     }
 }
+// EF 1) Code First (Code First) - створення моделей, які потім перетворюються на таблиці бази даних - у нас цей спосіб для цього проекту
+//    2) Database First (Database First) - створення бази даних, а потім генерація моделей на основі цієї бази даних

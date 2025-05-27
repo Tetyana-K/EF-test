@@ -42,17 +42,32 @@ var ihor = new Person
         City = "Lutsk"
     }
 };
+
+var olesia = new Person
+{
+    FirstName = "Olesia",
+    LastName = "Petrenko",
+    
+};
+var address = new Address
+{
+    Street = "Bila",
+    City = "Hmelnitski"
+};
+
 db.Persons.Add(ann);
 db.Persons.Add(dmytro);
 db.Persons.Add(ihor);
+db.Persons.Add(olesia);
 
+//db.Addresses.Add(address); // додати адресу до бази даних
 db.SaveChanges();
 
 Console.WriteLine("Persons:");
 
 foreach(var p in db.Persons.Include(p=> p.Address)) // Include(p => p.Address) — завантажує навігаційну властивість (адресу)
 {
-    Console.WriteLine($"{p.Id}: {p.FirstName} {p.LastName}, {p.Address?.Street}, {p.Address?.City}");
+    Console.WriteLine($"{p.Id}: {p.FirstName} {p.LastName}, {p.Address?.Street?? "Unknown street"}, {p.Address?.City ?? "Unknown city"}");
 }
 
 Address newAddress = new Address { Street = "Korzo", City = "Uzgorod" };
@@ -69,6 +84,14 @@ if (UpdatePersonAddress(id, newAddress))
 
 RemovePerson(3);
 PrintAllPersons();
+
+Console.WriteLine("-----For test - check list of addresses");
+foreach (var a in db.Addresses)
+{
+    Console.WriteLine($"{a.PersonId} -  {a.Street}, {a.City}");
+}
+
+// UpdatePersonAddress - оновлює адресу особи за Id
 bool UpdatePersonAddress(int personId, Address newAddress)
 {
     var person = db.Persons.Include(p => p.Address)

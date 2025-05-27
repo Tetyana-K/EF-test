@@ -11,7 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WinAppUsers", "WinAppUsers\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EF-Student", "EF-Student\EF-Student.csproj", "{5AEB4C56-A65E-4278-8C83-6595020EB484}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "One-to-one", "One-to-one\One-to-one.csproj", "{00C96641-55A0-4F84-AE44-09FE6B3A5744}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "One-to-one", "One-to-one\One-to-one.csproj", "{00C96641-55A0-4F84-AE44-09FE6B3A5744}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "One-to-many", "One-to-many\One-to-many.csproj", "{B8162FCC-4131-4305-9193-64B2A0C65C38}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{00C96641-55A0-4F84-AE44-09FE6B3A5744}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{00C96641-55A0-4F84-AE44-09FE6B3A5744}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{00C96641-55A0-4F84-AE44-09FE6B3A5744}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B8162FCC-4131-4305-9193-64B2A0C65C38}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B8162FCC-4131-4305-9193-64B2A0C65C38}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B8162FCC-4131-4305-9193-64B2A0C65C38}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B8162FCC-4131-4305-9193-64B2A0C65C38}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
