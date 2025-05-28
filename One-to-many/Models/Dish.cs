@@ -14,7 +14,7 @@ namespace One_to_many.Models
         public string Description { get; set; } = String.Empty;
 
         [Range(0.0, 1000.0, ErrorMessage = "Price must be between 0 and 1000.")]
-        public decimal Price { get; set; }
+        public decimal Price { get; set; } // decimal співставляється з типом money в SQL Server, що дозволяє зберігати точні значення для цін (decimal 18, 2)
 
         //[ForeignKey("Menu")] можемо вказати явно, що це зовн ключ (1-й спосіб)
         public int MenuId { get; set; } // Foreign key для Меню, можна не задавати, EF Core сам створить це поле (але маємо кращий контроль та читабельність, якщо задамо)

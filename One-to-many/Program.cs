@@ -7,6 +7,7 @@ using System.Linq;
 Console.WriteLine("One-to-many relation (EF Core)");
 
 using var db = new MenuDbContext();
+
 db.Database.EnsureDeleted(); // видалити базу даних, якщо вона існує
 db.Database.EnsureCreated(); // створити базу даних, якщо вона не існує
 
@@ -50,7 +51,7 @@ db.Menus.Add(desertMenu);
 db.SaveChanges();
 
 Console.WriteLine("Menus and their dishes:");
-foreach (var m in db.Menus.Include(d => d.Dishes)) // Include(d => d.Dishes) — завантажує навігаційну властивість страви
+foreach (var m in db.Menus.Include(d => d.Dishes)) //eager loading (жадібне завантаження) Include(d => d.Dishes) — завантажує навігаційну властивість страви
 {
     PrintMenu(m);
 }
@@ -143,8 +144,7 @@ void AddDishToMenu(int menuId, Dish dish)
         Console.WriteLine($"Menu with Id {menuId} not found");
         return;
     }
-    menu.Dishes.Add(dish);
-    db.SaveChanges();
+    menu.Dishes.Add(dish); // додаємо страву до меню   через навігаційну властивість Dishes
 }
 
 void RemoveDishFromMenu(int menuId, int dishId)
@@ -156,6 +156,7 @@ void RemoveDishFromMenu(int menuId, int dishId)
         return;
     }
     var dish = menu.Dishes.FirstOrDefault(d => d.Id == dishId);
+    //var dish = db.Dishes.Find(dishId); // шукаємо страву за Id
     if (dish == null)
     {
         Console.WriteLine($"Dish with Id {dishId} not found in Menu {menu.Name}");
@@ -167,7 +168,7 @@ void RemoveDishFromMenu(int menuId, int dishId)
 
 void RemoveMenu(int menuId)
 {
-    var menu = db.Menus.Find(menuId);
+    var menu = db.Menus.Find(menuId); // шукаємо меню за Id, Find - метод із DbSet, який шукає об'єкт за первинним ключем (Id)
     if (menu != null)
     {
         db.Menus.Remove(menu);
@@ -221,7 +222,7 @@ void UpdateDishNamPriceDescription(int dishId, string newName, string newDescrip
     }
 }
 
-void UpdateDish(Dish dish) // поновлення повного обʼєкта на основі об'єкта dish, який містить Id існуючої страви
+void UpdateDish(Dish dish) // !!! поновлення повного обʼєкта на основі об'єкта dish, який містить Id існуючої страви
 {
     var existingDish = db.Dishes.Find(dish.Id);
     if (existingDish != null)
