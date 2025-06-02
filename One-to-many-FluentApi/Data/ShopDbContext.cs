@@ -62,7 +62,7 @@ namespace One_to_many_FluentApi.Data
                 .WithOne(p => p.Manufacturer)
                 .HasForeignKey(m => m.ManufacturerId)
                 //.OnDelete(DeleteBehavior.Restrict); // видалити виробника не можна, якщо є продукти, що до нього належать (буде помилка)
-                .OnDelete(DeleteBehavior.Cascade); // при виделенні виробника, продукти, що до нього належать будуть видалені
+                .OnDelete(DeleteBehavior.Cascade); // при видаленні виробника, продукти, що до нього належать будуть видалені
 
             //modelBuilder.Entity<Product>()
             //    .HasOne(p => p.Manufacturer) // один продукт має одного виробника

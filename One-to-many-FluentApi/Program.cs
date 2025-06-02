@@ -7,8 +7,8 @@ Console.OutputEncoding = System.Text.Encoding.UTF8; // Для коректног
 
 using var db = new ShopDbContext();
 
-db.Database.EnsureDeleted(); // ❗Для демонстрації: очистити БД
-db.Database.EnsureCreated(); // Створити БД заново
+db.Database.EnsureDeleted(); 
+db.Database.EnsureCreated(); 
 
 // Додаємо категорію і виробника
 var category = new Category { Name = "Електроніка" };
@@ -52,7 +52,7 @@ static void ShowProducts(ShopDbContext db)
     Console.WriteLine("Продукти у базі:");
     foreach (var p in products)
     {
-        Console.WriteLine($" - {p.Name}, Ціна: {p.Price}, Category: {p.Category?.Name??"Unknown"}, Manufacturer: {p.Manufacturer?.Name}");
+        Console.WriteLine($" - {p.Name}, Ціна: {p.Price}, Category: {p.Category?.Name ?? "Unknown"}, Manufacturer: {p.Manufacturer?.Name}");
     }
     Console.WriteLine();
 }
