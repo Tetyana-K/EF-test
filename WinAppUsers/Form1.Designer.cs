@@ -30,9 +30,10 @@
         {
             dataGridView1 = new DataGridView();
             groupBox1 = new GroupBox();
-            textBoxName = new TextBox();
             textBoxEmail = new TextBox();
+            textBoxName = new TextBox();
             buttonAdd = new Button();
+            buttonEdit = new Button();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             groupBox1.SuspendLayout();
             SuspendLayout();
@@ -42,8 +43,9 @@
             dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dataGridView1.Location = new Point(124, 30);
             dataGridView1.Name = "dataGridView1";
-            dataGridView1.Size = new Size(517, 228);
+            dataGridView1.Size = new Size(335, 238);
             dataGridView1.TabIndex = 0;
+            dataGridView1.SelectionChanged += dataGridView1_SelectionChanged;
             // 
             // groupBox1
             // 
@@ -51,17 +53,10 @@
             groupBox1.Controls.Add(textBoxName);
             groupBox1.Location = new Point(124, 292);
             groupBox1.Name = "groupBox1";
-            groupBox1.Size = new Size(242, 129);
+            groupBox1.Size = new Size(212, 129);
             groupBox1.TabIndex = 1;
             groupBox1.TabStop = false;
-            groupBox1.Text = "groupBox1";
-            // 
-            // textBoxName
-            // 
-            textBoxName.Location = new Point(52, 22);
-            textBoxName.Name = "textBoxName";
-            textBoxName.Size = new Size(100, 23);
-            textBoxName.TabIndex = 2;
+            groupBox1.Text = "User";
             // 
             // textBoxEmail
             // 
@@ -69,6 +64,13 @@
             textBoxEmail.Name = "textBoxEmail";
             textBoxEmail.Size = new Size(100, 23);
             textBoxEmail.TabIndex = 3;
+            // 
+            // textBoxName
+            // 
+            textBoxName.Location = new Point(52, 22);
+            textBoxName.Name = "textBoxName";
+            textBoxName.Size = new Size(100, 23);
+            textBoxName.TabIndex = 2;
             // 
             // buttonAdd
             // 
@@ -80,11 +82,22 @@
             buttonAdd.UseVisualStyleBackColor = true;
             buttonAdd.Click += buttonAdd_Click;
             // 
+            // buttonEdit
+            // 
+            buttonEdit.Location = new Point(384, 359);
+            buttonEdit.Name = "buttonEdit";
+            buttonEdit.Size = new Size(75, 23);
+            buttonEdit.TabIndex = 3;
+            buttonEdit.Text = "Edit User";
+            buttonEdit.UseVisualStyleBackColor = true;
+            buttonEdit.Click += buttonEdit_Click;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(800, 450);
+            ClientSize = new Size(598, 450);
+            Controls.Add(buttonEdit);
             Controls.Add(buttonAdd);
             Controls.Add(groupBox1);
             Controls.Add(dataGridView1);
@@ -103,5 +116,6 @@
         private TextBox textBoxEmail;
         private TextBox textBoxName;
         private Button buttonAdd;
+        private Button buttonEdit;
     }
 }

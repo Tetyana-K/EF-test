@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace One_to_many_FluentApi.Data
 {
+    // one --to-many
     public class ShopDbContext : DbContext
     {
         public DbSet<Category> Categories { get; set; } = null!;
@@ -20,18 +21,21 @@ namespace One_to_many_FluentApi.Data
                 .UseSqlServer(@"Server=(localdb)\mssqllocaldb;Database=EF_ShopDb;Trusted_Connection=True;");
             //.LogTo(Console.WriteLine, LogLevel.Information); // буде виводити  SQL-запити у консоль
         }
+
         override protected void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // конфігурація сутності Category
+            // конфігурація сутності (моделі) Category
             modelBuilder.Entity<Category>(e =>
             {
-                e.ToTable("Categories") // назва таблиці для Category
+                // e.HasKey(c => c.Id); // первинний ключ для Category
+
+                e.ToTable("Categories")// назва таблиці для Category
                 .HasKey(c => c.Id) // первинний ключ для Category
                 .HasName("PK_Category"); // ім'я первинного ключа
 
                 e.Property(p => p.Name)
                 .HasColumnName("CategoryName") // назва стовпця для Name
-                .HasMaxLength(50) // максимальна довжина рядка
+                .HasMaxLength(50) // максимальна довжина рядка (обмеження на рівні таблиці)
                 .IsRequired(); // обов'язкове поле
 
                 e.HasIndex(p => p.Name) // індекс для стовпця Name
@@ -46,20 +50,20 @@ namespace One_to_many_FluentApi.Data
 
                 e.Property(p => p.Price)
                 .HasColumnType("decimal(18,2)"); // тип даних для Price
-                e.HasCheckConstraint("CK_Product_Price", "[Price] >= 0"); // обмеження для Price, щоб воно було більше 0
+                e.HasCheckConstraint("CK_Product_Price", "[Price] >= 0"); // обмеження для Price (на рівні БД), щоб воно було більше 0
             });
 
             // конфігурація зв'язків між сутностями Category та  Product
             modelBuilder.Entity<Product>()
-                .HasOne(p => p.Category) // один продукт має одну категорію
-                .WithMany(c => c.Products) // одна категорія має багато продуктів
+                .HasOne(p => p.Category) // (Has) один ПРОДУКТ має одну категорію
+                .WithMany(c => c.Products) // (With) одна КАТЕГОРІЯ має багато продуктів
                 .HasForeignKey(p => p.CategoryId) // зовнішній ключ у Product
                 .OnDelete(DeleteBehavior.SetNull); // видалення категорії не призведе до видалення продуктів, які до неї належать, при видаленні категорії CategoryId у продуктів стане null
 
             // конфігурація зв'язків між сутностями Manufacturer та  Product
             modelBuilder.Entity<Manufacturer>()
-                .HasMany(c => c.Products)
-                .WithOne(p => p.Manufacturer)
+                .HasMany(c => c.Products) // виробник має багато продуктів
+                .WithOne(p => p.Manufacturer) // продукт має одного виробника
                 .HasForeignKey(m => m.ManufacturerId)
                 //.OnDelete(DeleteBehavior.Restrict); // видалити виробника не можна, якщо є продукти, що до нього належать (буде помилка)
                 .OnDelete(DeleteBehavior.Cascade); // при видаленні виробника, продукти, що до нього належать будуть видалені

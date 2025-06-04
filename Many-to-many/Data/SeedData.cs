@@ -21,21 +21,21 @@ namespace Many_to_many.Data
             var course1 = new Course 
             {
                 Name = "Intro to Programming",
-                Description = "Introduction to Programming (C++)",
+                Description = "Programming (C++)",
                 StartDate = new DateTime(2024, 2, 1),
                 EndDate = new DateTime(2024, 12, 25) 
             };
             var course2 = new Course 
             {
                 Name = "Intro to Web Development",
-                Description = "Front-end and back-end web technologies: HTML, CSS",
+                Description = "Front-end  technologies: HTML, CSS",
                 StartDate = new DateTime(2023, 2, 1),
                 EndDate = new DateTime(2025, 6, 28) 
             };
             var course3 = new Course
             {
                 Name = "Databases and SQL",
-                Description = "Relational databases, SQL queries, EF Core.",
+                Description = "Relational databases, SQL queries",
                 StartDate = new DateTime(2025, 9, 1),
                 EndDate = new DateTime(2025, 11, 30)
             };

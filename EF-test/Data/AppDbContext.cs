@@ -7,7 +7,7 @@ namespace EF_test.Data
     {
         public AppDbContext()
         {
-            Database.EnsureDeleted(); // видалити базу даних, якщо вона існує
+           Database.EnsureDeleted(); // видалити базу даних, якщо вона існує
             Database.EnsureCreated(); // створити базу даних, якщо вона не існує
         }
         public DbSet<User> Users { get; set; } = null!; // колекція, яка буде повязана з таблицею  Users в базі даних
