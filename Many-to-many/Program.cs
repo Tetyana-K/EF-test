@@ -30,7 +30,7 @@ var badCourse = new Course
     Name = "Te_1", // name
     Description = "Invalid because EndDate < StartDate",
     StartDate = new DateTime(2025, 10, 1),
-    EndDate = new DateTime(2025, 5, 1) // Помилка  задання лати
+    EndDate = new DateTime(2025, 5, 1) // Помилка  задання дати
 };
 
 AddCourse(badCourse);
@@ -39,7 +39,7 @@ var mathCourse = new Course // ID = 4
 {
     Name = "Mathematics", // name
     Description = "Mathematics (linear algebra)",
-    StartDate = new DateTime(2025, 9, 1),
+    StartDate = new DateTime(2024, 9, 1),
     EndDate = new DateTime(2025, 12, 22) 
 };
 
@@ -76,23 +76,38 @@ void AddCourse(Course course)
     var validationResults = new List<ValidationResult>();
 
     // перевіряємо чи  об'єкт валідний
+    //if (!Validator.TryValidateObject(course, context, validationResults, validateAllProperties: true))
+    //{
+    //    // якщо хочемо потім побачити усі помилки валідації, якщо закоментувати рядки 83-87, то буде виведено лише першу помилку
+    //    var iValidatable = course as IValidatableObject;
+    //    //course.Validate(context) --- можна коротше
+    //    if (iValidatable != null)
+    //    {
+    //         var customResults = iValidatable.Validate(context);
+    //         validationResults.AddRange(customResults);
+    //    }
+    //    // виводимо помилки валідації
+    //    foreach (var validationResult in validationResults)
+    //    {
+    //        Console.WriteLine($"Validation error: {validationResult.ErrorMessage}");
+
+    //    }
+    //    Console.WriteLine($"Course '{course.Name}' not added.");
+    //}
+    // Перевірка валідності об'єкта
     if (!Validator.TryValidateObject(course, context, validationResults, validateAllProperties: true))
     {
-        // якщо хочемо потім побачити усі помилки валідації, якщо закоментувати рядки 56-61, то буде виведено лише першу помилку
-        var iValidatable = course as IValidatableObject;
-        // if (iValidatable != null)
+        // Виводимо лише першу помилку
+        var firstError = validationResults.FirstOrDefault();
+        if (firstError != null)
         {
-            var customResults = iValidatable.Validate(context);
-            validationResults.AddRange(customResults);
+            Console.WriteLine($"Validation error: {firstError.ErrorMessage}");
         }
-        // виводимо помилки валідації
-        foreach (var validationResult in validationResults)
-        {
-            Console.WriteLine($"Validation error: {validationResult.ErrorMessage}");
 
-        }
-        Console.WriteLine($"Course '{course.Name}' not added.");
+        Console.WriteLine($"Course '{course?.Name}' not added.");
+        
     }
+
     else
     {
         // інакше - ВСЕ ДОБРЕ, пишемо курс у БД

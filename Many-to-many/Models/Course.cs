@@ -25,6 +25,12 @@ namespace Many_to_many.Models
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
+            if (StartDate.Year != DateTime.Today.Year)
+            {
+                yield return new ValidationResult(
+                    "Start date must be in the current year.",
+                    new[] { nameof(StartDate) });
+            }
             if (EndDate < StartDate)
             {
                 yield return new ValidationResult(
