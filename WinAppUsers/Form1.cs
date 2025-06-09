@@ -10,7 +10,9 @@ namespace WinAppUsers
         public Form1()
         {
             InitializeComponent();
-           LoadUsers();
+            //dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;  
+            dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.DisplayedCells; // автоматичне налаштування ширини стовпців DataGridView під дані, які відображаються
+            LoadUsers();
         }
 
         private void LoadUsers()
@@ -93,5 +95,77 @@ namespace WinAppUsers
                 textBoxEmail.Clear();
             }
         }
+
+        private void buttonDelete_Click(object sender, EventArgs e)
+        {
+            var index = dataGridView1.CurrentCell.RowIndex;
+            if (index < 0)
+            {
+                MessageBox.Show("Please select a user to delete.");
+                return;
+            }
+            var user = db.Users.ToList()[index];
+            db.Users.Remove(user); // видаляємо користувача з контексту бази даних
+            db.SaveChanges(); // зберігаємо зміни в базі даних
+
+            // переналаштовуємо джерело даних для DataGridView на нові дані
+            dataGridView1.DataSource = null; // Clear the current data source
+            dataGridView1.DataSource = db.Users.ToList(); // Refresh the data source
+
+        }
+
+        private void buttonSortByName_Click(object sender, EventArgs e)
+        {
+
+            var users = db.Users.OrderBy(u => u.Name).ToList(); // отримуємо список користувачів, сортуємо за іменем
+
+            // переналаштовуємо джерело даних для DataGridView на список users (відсортований)
+            //dataGridView1.DataSource = null; // Clear the current data source
+            dataGridView1.DataSource = users; // поновили джерело даних для DataGridView
+        }
+
+        private void buttonSortById_Click(object sender, EventArgs e)
+        {
+            var users = db.Users.ToList(); // отримуємо список користувачів
+
+            // переналаштовуємо джерело даних для DataGridView на нові дані
+            //dataGridView1.DataSource = null; // очищаємо поточне джерело даних
+            dataGridView1.DataSource = users; // поновили джерело даних для DataGridView
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            //var users
+        }
+
+        private void buttonFilterByName_Click(object sender, EventArgs e)
+        {
+            string name = textBoxFilterName.Text;
+            if (string.IsNullOrEmpty(name))
+            {
+                MessageBox.Show("Please enter a name to filter.");
+                return;
+            }
+            var users = db.Users.Where(u => u.Name.StartsWith(name)).ToList(); // фільтруємо користувачів за іменем
+            if (users.Count == 0)
+            {
+                MessageBox.Show("No users found with the specified name.");
+                return;
+            }
+            // переналаштовуємо джерело даних для DataGridView на нові дані
+            dataGridView1.DataSource = null; // очищаємо поточне джерело даних
+            dataGridView1.DataSource = users; // поновлюємо джерело даних для DataGridView з відфільтрованими користувачами
+
+        }
+
+        private void buttonClearFilters_Click(object sender, EventArgs e)
+        {
+            var users = db.Users.ToList(); // отримуємо список всіх користувачів
+            // переналаштовуємо джерело даних для DataGridView на нові дані
+            //dataGridView1.DataSource = null; // очищаємо поточне джерело даних
+            dataGridView1.DataSource = users; // поновлюємо джерело даних для DataGridView з усіма користувачами
+            textBoxFilterName.Clear(); // очищаємо текстове поле фільтру
+        }
     }
 }
+

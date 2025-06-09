@@ -14,7 +14,7 @@ db.Database.EnsureCreated();
 SeedData.SeedDatabase(db);
 Console.WriteLine("Database seeded with initial data.\n");
 
-var students = db.Students.Include(s => s.Courses).ToList();
+var students = db.Students.Include(s => s.Courses).ToList(); // Eager loading to include courses for each student
 Console.WriteLine("__________Students and their courses:");
 foreach (var student in students)
 {
@@ -35,7 +35,7 @@ var badCourse = new Course
 
 AddCourse(badCourse);
 
-var mathCourse = new Course
+var mathCourse = new Course // ID = 4
 {
     Name = "Mathematics", // name
     Description = "Mathematics (linear algebra)",
@@ -45,21 +45,21 @@ var mathCourse = new Course
 
 AddCourse(mathCourse);
 
-//Console.WriteLine("\n_________Delete course with Id = 1");
-//DeleteCourse(1);
-//PrintStudentsAndCourses();
-
-//Console.WriteLine("\n_________Delete student with Id = 1");
-//DeleteStudent(1);
-//PrintStudentsAndCourses();
-
-Console.WriteLine("\n_____Deleteing course with Id = 1 from student with Id = 2");
-UnenrollStudentFromCourse (1, 2); // видаляємо курс з Id=2 у студента з Id=1
+Console.WriteLine("\n_________Delete course with Id = 1");
+DeleteCourse(1);
 PrintStudentsAndCourses();
 
-Console.WriteLine($"\n_____Ennrollment student  with Id = 1  to course with Id = 4");
-EnrollStudentInCourse(1, 4);
+Console.WriteLine("\n_________Delete student with Id = 1");
+DeleteStudent(1);
 PrintStudentsAndCourses();
+
+//Console.WriteLine("\n_____Deleteing course with Id = 1 from student with Id = 2");
+//UnenrollStudentFromCourse (1, 2); // видаляємо курс з Id=2 у студента з Id=1
+//PrintStudentsAndCourses();
+
+//Console.WriteLine($"\n_____Ennrollment student  with Id = 1  to course with Id = 4");
+//EnrollStudentInCourse(1, 4); // Mark M. enrolled in Mathematics course
+//PrintStudentsAndCourses();
 
 
 void AddCourse(Course course)
@@ -95,7 +95,7 @@ void AddCourse(Course course)
     }
     else
     {
-        // інакше - все добре, пишемо курс у БД
+        // інакше - ВСЕ ДОБРЕ, пишемо курс у БД
         db.Courses.Add(course);
         db.SaveChanges();
     }
@@ -103,7 +103,7 @@ void AddCourse(Course course)
 
 void DeleteCourse(int courseId)
 {
-    var course = db.Courses.FirstOrDefault(c => c.Id == courseId);
+    var course = db.Courses.Find(courseId);//FirstOrDefault(c => c.Id == courseId);
     if (course != null)
     {
         db.Courses.Remove(course);
@@ -170,7 +170,7 @@ void EnrollStudentInCourse(int studentId, int courseId)
 
     if (student == null)
     {
-        Console.WriteLine($"Student with Id={studentId} not found.");
+        Console.WriteLine($"Student with Id = {studentId} not found.");
         return;
     }
 

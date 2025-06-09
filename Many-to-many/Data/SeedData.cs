@@ -14,7 +14,7 @@ namespace Many_to_many.Data
             var student2 = new Student { Name = "Nastia N.", BirthDate = new DateTime(2007, 2, 28) };
             var student3 = new Student { Name = "Danylo D.", BirthDate = new DateTime(2006, 3, 22) };
 
-            // додавання студентів
+            // додавання студентів до контексту БД
             context.Students.AddRange(student1, student2, student3);
 
             // створення курсів
@@ -41,7 +41,10 @@ namespace Many_to_many.Data
             };
 
             // додали курси
-            context.Courses.AddRange(course1, course2);
+            //context.Courses.Add(course1);
+            //context.Courses.Add(course2, course3);
+            // додавання курсів до контексту БД
+            context.Courses.AddRange(course1, course2, course3);
 
             // зв'язування студентів з курсами
             student1.Courses.Add(course1);
