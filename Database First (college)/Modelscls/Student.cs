@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Database_First__college_.Models;
+namespace Database_First__college_.Modelscls;
 
 public partial class Student
 {
@@ -15,5 +15,5 @@ public partial class Student
 
     public int? Course { get; set; }
 
-    public virtual Group? Group { get; set; } // віртуальний - для лінивого завантаження, якщо потрібно, навігаційна властивість для відношення з Group
+    public virtual Group? Group { get; set; }
 }

@@ -9,5 +9,5 @@ public partial class Department
 
     public string Name { get; set; } = null!;
 
-    public virtual ICollection<Group> Groups { get; set; } = new List<Group>();
+    public virtual ICollection<Group> Groups { get; set; } = new List<Group>(); // virtual - позначає, що ми будемо використовувати ліниве завантаження
 }

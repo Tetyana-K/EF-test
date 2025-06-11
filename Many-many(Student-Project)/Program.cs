@@ -57,20 +57,20 @@ void AddProject(string title)
 
 void AssignStudentProject(int studentId, int projectId, int grade)
 {
-    var student = db.Students.Find(studentId);
+    var student = db.Students.Find(studentId); // пошук по первинному ключу
     if (student == null)
     {
         Console.WriteLine($"Student with Id={studentId} not found.");
         return;
     }
-    var project = db.Projects.Find(projectId);
+    var project = db.Projects.Find(projectId); // пошук по первинному ключу
     if (project == null)
     {
         Console.WriteLine($"Project with Id={projectId} not found.");
         return;
     }
 
-    var existingAssignment = db.StudentProjects.Find(studentId, projectId);
+    var existingAssignment = db.StudentProjects.Find(studentId, projectId); // пошук ПО ПЕРВИННОМУ КЛЮЧУ (але ключ складний - на двох полях)
     //.FirstOrDefault(sp => sp.StudentId == studentId && sp.ProjectId == projectId);
     if (existingAssignment != null)
     {

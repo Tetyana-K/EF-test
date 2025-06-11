@@ -1,12 +1,42 @@
-﻿using System.Data.SqlClient;
+﻿using System.Data;
+using System.Data.Common;
+using System.Data.SqlClient;
 using Dapper;
 using Dapper_intro.Models;
+/*
+Dapper - mini ORM, швидша порівняно з популярною EF Core. 
+Dapper дозволяє писати SQL-запити до БД і мапити їх на C# класи, загалом дозволяє зв'язати .Net код і SQL.
+З  мінусів -  даппер не автогенерує код і багато шаблонних запитів, таких як SELECT, INSERT, DELETE, їх доводиться писати вручну,
+але він дозволяє писати складні запити практично не жертвуючи швидкістю роботи програми.
+ 
+ 
+ https://www.learndapper.com/
+
+Для використання Dapper необхідно встановити NuGet пакет Dapper:
+dotnet add package Dapper
+
+Створили попередньо базу даних Dapper_UsersDb, таблицю Users, додали кілька записів у таблицю Users.
+// Таблиця Users має такі колонки: Id, Name, Email, Password
+CREATE TABLE [dbo].[Users] (
+    [Id]       INT            IDENTITY (1, 1) NOT NULL,
+    [Name]     NVARCHAR (100) NOT NULL,
+    [Email]    NVARCHAR (100) NOT NULL,
+    [Password] NVARCHAR (100) NOT NULL,
+    PRIMARY KEY CLUSTERED ([Id] ASC)
+);
+// Додали кілька записів у таблицю Users:
+
+Також створили модель User, яка відповідає таблиці Users у базі даних.
+ */
+
 
 //@"Server=(localdb)\mssqllocaldb;Database=EF_StudentProjectDb;Trusted_Connection=True;"
 string connectionString = @"Server=(localdb)\mssqllocaldb;Database=Dapper_UsersDb;Trusted_Connection=True;";
 try
 {
-    using SqlConnection connection = new(connectionString);
+    // Створення підключення до бази даних LocalDB за допомогою Dapper
+    using IDbConnection connection = new SqlConnection(connectionString);
+    // Відкриття підключення
     connection.Open();
     Console.WriteLine("Successfully connected to LocalDB!");
 
@@ -24,22 +54,43 @@ try
     //var user = connection.QuerySingle<User>("SELECT * FROM Users WHERE Id = 2");
     try
     {
+        // Отримання одного рядка - виконання запиту для отримання даних з таблиці Users за Id (QuerySingle)
+        // @Id - це параметр запиту, який буде замінено на значення id
         var user = connection.QuerySingle<User>("SELECT * FROM Users WHERE Id = @Id", new { Id = id });
-
         Console.WriteLine($"{user.Id}: {user.Name} - {user.Email}");
-
     }
-    catch (InvalidOperationException)
+    catch (InvalidOperationException) // якщо не знайдено жодного рядка
     {
         Console.WriteLine($"User with Id = {id} not found.");
     }
 
+    id = 3;
+    Console.WriteLine($"\n______________Get user with Id = {id} ....");
+    // Отримання одного рядка - виконання запиту для отримання даних з таблиці Users за Id (QuerySingleOrDefault), повертає null, якщо не знайдено жодного рядка
+    var user1 = connection.QuerySingleOrDefault<User>("SELECT * FROM Users WHERE Id = @searchId", new { searchId = 3});
+    if (user1 != null)
+    {
+
+        Console.WriteLine($"{user1.Id}: {user1.Name} - {user1.Email}");
+    }
+
 
     // Отримання кількох рядків - виконання запиту для отримання даних з таблиці Users
-
     Console.WriteLine("\n_____________Get all users");
     string sql = "SELECT * FROM Users;";
     var users = connection.Query<User>(sql).ToList();
+
+    foreach (var u in users)
+    {
+        Console.WriteLine($"{u.Id}: {u.Name} - {u.Email}");
+    }
+
+    // Отримання кількох рядків - виконання запиту для отримання даних з таблиці Users
+    Console.WriteLine("\n_____________Get all users with name Ann");
+    sql = "SELECT * FROM Users WHERE Name = @Name;";
+    //sql = "SELECT * FROM Users WHERE Name = @Name AND Email = @Email AND Id >= @Id;";
+    users = connection.Query<User>(sql, new User { Name = "Ann" }).ToList();
+    //users = connection.Query<User>(sql, new User {Name="Ann", Email="ann@gmail.com", Id = 8 }).ToList();
 
     foreach (var u in users)
     {
@@ -50,32 +101,42 @@ try
     using var multi = connection.QueryMultiple("SELECT * FROM Users  WHERE email LIKE '%@gmail.com'; SELECT count(*) FROM Users WHERE email LIKE '%@gmail.com';");
     users = multi.Read<User>().ToList();
     count = multi.Read<int>().Single();
-    Console.WriteLine($"\n___________ Number of users with gmail email: {count}");
+    Console.WriteLine($"\n___________ Number of users with gmail.com email: {count}");
     foreach (var u in users)
     {
         Console.WriteLine($"{u.Id}: {u.Name} - {u.Email}");
     }
+
     //Виконання запитів, що оновлюють дані: вставка, поновлення, видалення
     //Вставлення даних
 
-    Console.WriteLine("\n_____________Insert new user");
-    var newUser = new User() { Name = "Ann", Email = "ann@gmail.com", Password = "111"};
-    string insertSql = "INSERT INTO Users (Name, Email, Password) VALUES (@Name, @Email, @Password);";
-   // connection.Execute(insertSql, newUser);
-    Console.WriteLine($"New user {newUser.Name} with email {newUser.Email} has been added.");
+    //Console.WriteLine("\n_____________Insert new user");
+    //Console.Write("Input user name : ");
+    //string name = Console.ReadLine() ?? "Noname";
+
+    //Console.Write("Input user password : ");
+    //string password = Console.ReadLine() ?? "1";
+
+    //Console.Write("Input user email : ");
+    //string email = Console.ReadLine() ?? "1";
+
+    //var newUser = new User() { Name = name, Email = email, Password = password};
+    //string insertSql = "INSERT INTO Users (Name, Email, Password) VALUES (@Name, @Email, @Password);";
+    ////connection.Execute(insertSql, newUser);
+    //Console.WriteLine($"New user {newUser.Name} with email {newUser.Email} has been added.");
+
     sql = "SELECT * FROM Users;";
     users = connection.Query<User>(sql).ToList();
-
     foreach (var u in users)
     {
         Console.WriteLine($"{u.Id}: {u.Name} - {u.Email}");
     }
 
-    
     //Оновлення даних;
     var upateSql = "UPDATE Users SET Password = @Password WHERE Id = @Id;";
     Console.WriteLine("\n_____________Update user with Id = 2");
-    connection.Execute(upateSql, new User { Id =2, Password= "super-admin"});
+    count = connection.Execute(upateSql, new { Id = 2, Password = "super-admin" });
+    Console.WriteLine($"{count} records updated.");
     Console.WriteLine("User with Id = 2 has been updated.");
     sql = "SELECT * FROM Users;";
     users = connection.Query<User>(sql).ToList();
@@ -84,9 +145,24 @@ try
         Console.WriteLine($"{u.Id}: {u.Name} - {u.Email}, {u.Password}");
     }
 
+    //Оновлення даних; --- delete this later
+    //upateSql = $"UPDATE Users SET Email = Email + 'm' WHERE Email Like '%@frag%'";
+    //Console.WriteLine("\n_____________Update email of users");
+    //count = connection.Execute(upateSql, new{ frag= "gmail" });
+    //Console.WriteLine($"{count} records updated.");
+    //Console.WriteLine("Users with gmail have been updated.");
+    //sql = "SELECT * FROM Users;";
+    //users = connection.Query<User>(sql).ToList();
+    //foreach (var u in users)
+    //{
+    //    Console.WriteLine($"{u.Id}: {u.Name} - {u.Email}, {u.Password}");
+    //}
+
     //Видалення даних
-    connection.Execute("DELETE FROM Users WHERE Id = @Id;", new { Id = 6 });
-    Console.WriteLine("\n_____________Delete user with Id = 6");
+    Console.Write("Input user Id to delete: ");
+    int deleteId = int.Parse(Console.ReadLine());
+    connection.Execute("DELETE FROM Users WHERE Id = @Id;", new { Id = deleteId });
+    Console.WriteLine($"\n_____________Delete user with Id = {deleteId}");
     users = connection.Query<User>(sql).ToList();
     foreach (var u in users)
     {
@@ -94,7 +170,7 @@ try
     }
 
 }
-catch (SqlException ex)
+catch (DbException ex)//SqlException ex)
 {
     Console.WriteLine($"Connection error: {ex.Message}");
     return;

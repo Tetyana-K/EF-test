@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <RootNamespace>Dapper_Plus__insert_from_CSV_</RootNamespace>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CsvHelper" Version="33.1.0" />
+    <PackageReference Include="Dapper" Version="2.1.66" />
+    <PackageReference Include="system.data.sqlclient" Version="4.9.0" />
+    <PackageReference Include="Z.Dapper.Plus" Version="7.6.0" />
+  </ItemGroup>
+
+</Project>

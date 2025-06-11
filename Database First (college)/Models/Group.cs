@@ -11,7 +11,7 @@ public partial class Group
 
     public int? DepartmentId { get; set; }
 
-    public virtual Department? Department { get; set; }
+    public virtual Department? Department { get; set; } // віртуальний - для лінивого завантаження, якщо потрібно, навігаційна властивість для відношення з Department
 
-    public virtual ICollection<Student> Students { get; set; } = new List<Student>();
+    public virtual ICollection<Student> Students { get; set; } = new List<Student>(); // віртуальний - для лінивого завантаження, якщо потрібно, навігаційна властивість для відношення з Student
 }
