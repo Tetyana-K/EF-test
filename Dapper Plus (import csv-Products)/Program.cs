@@ -1,4 +1,21 @@
 ﻿// https://www.mockaroo.com/  можна генерувти дані для .csv файлу
+/*
+ * CSV (Comma-Separated Values) — це текстовий формат файлів, який використовується для збереження табличних даних (як у Excel чи Google Sheets). 
+ * У ньому кожен рядок — це один запис (рядок таблиці), а значення в рядку розділені комами чи іншими символами (наприклад, крапкою з комою).
+ 
+Name,Price,Quantity
+Notebook,15.5,10
+Pen,1.2,100
+Backpack,45.0,5
+ */
+
+/* * Для роботи з Dapper Plus та зручної обробки csv-файлів потрібно встановити наступні пакети NuGet:
+ * dotnet add package Microsoft.Data.SqlClient
+ * dotnet add package Dapper
+ * dotnet add package Z.Dapper.Plus
+ * dotnet add package CsvHelper
+ */
+
 using CsvHelper;
 using CsvHelper.Configuration;
 using System.Globalization;
@@ -12,6 +29,7 @@ string csvPath = @"../../../products.csv";
 string connectionString = @"Server=(localdb)\mssqllocaldb;Database=DapperPlus_Products;Trusted_Connection=True;";
 
 List<Product> products; // сюди (products)  будемо імпортувати список продуктів з CSV
+// конфігурація CsvHelper для налаштування читання CSV файлу
 var config = new CsvConfiguration(CultureInfo.InvariantCulture)
 {
     PrepareHeaderForMatch = args => args.Header.ToLower() // коли будуть аналізуватися заголовки CSV, вони будуть приведені до нижнього регістру і властивості моделі Product також 
@@ -20,7 +38,7 @@ var config = new CsvConfiguration(CultureInfo.InvariantCulture)
 using (var reader = new StreamReader(csvPath)) // відкриваємо текстовий потік для читання CSV файлу
 using (var csv = new CsvReader(reader, config)) // створюємо CsvReader для читання CSV файлу
 {
-    products = csv.GetRecords<Product>().ToList(); // зчитуємо всі записи з CSV і перетворюємо їх у список Product
+    products = csv.GetRecords<Product>().ToList(); // зчитуємо всі записи з CSV і перетворюємо їх у список Product-ів (у пам'яті)
 }
 
 DapperPlusManager.Entity<Product>().Table("Products"); // вказуємо Dapper Plus, що наш C# клас Product відповідає таблиці Products у базі даних

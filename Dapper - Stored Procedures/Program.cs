@@ -6,7 +6,7 @@ using Dapper;
 using System.Linq;
 using System.Collections.Generic;
 /*
-попереддньо створили таку процедуру  у БД Dapper_UsersDb
+попередньо створили таку процедуру  у БД Dapper_UsersDb
 create procedure  GetUserById
     @Id int
 as
@@ -43,13 +43,14 @@ try
 
     // Виконання збереженої процедури для вставки нового користувача
     // створюємо параметри для збереженої процедури
+    // параметри для збереженої процедури InsertUser, використовуємо DynamicParameters з Dapper для out - параметра
     var parameters = new DynamicParameters();
     // додаємо параметри до колекції
-    parameters.Add("@Name", "New User");
-    parameters.Add("@Email", "new_user@exmail.com");
-    parameters.Add("@Password", "New password");
+    parameters.Add("@Name", "New User 2");
+    parameters.Add("@Email", "new_user2@exmail.com");
+    parameters.Add("@Password", "New password2");
     // додаємо вихідний параметр для отримання Id нового користувача
-    parameters.Add("@NewId", dbType: DbType.Int32, direction: ParameterDirection.Output); // @NewId - Output parameter
+    parameters.Add("@NewId", dbType: DbType.Int32, direction: ParameterDirection.Output); // @NewId - Output parameter !!!
 
     connection.Execute(
         "InsertUser",
