@@ -23,6 +23,7 @@ using System.Data.SqlClient;
 using Z.Dapper.Plus;
 using Dapper_Plus__import_csv_Products_.Models;
 using Dapper;
+using CsvHelper.TypeConversion;
 
 Console.WriteLine("Dapper Plus: import data from CSV");
 string csvPath = @"../../../products.csv";
@@ -32,12 +33,18 @@ List<Product> products; // сюди (products)  будемо імпортува�
 // конфігурація CsvHelper для налаштування читання CSV файлу
 var config = new CsvConfiguration(CultureInfo.InvariantCulture)
 {
-    PrepareHeaderForMatch = args => args.Header.ToLower() // коли будуть аналізуватися заголовки CSV, вони будуть приведені до нижнього регістру і властивості моделі Product також 
+    PrepareHeaderForMatch = args => args.Header.ToLower(), // коли будуть аналізуватися заголовки CSV, вони будуть приведені до нижнього регістру і властивості моделі Product також 
+    MissingFieldFound = null // ігнорує зайві поля, які не знайдені у моделі Product
 };
+
+// Додати конвертер для перетворення рядків у enum Category
+var categoryConverter = new EnumConverter(typeof(Category));
 
 using (var reader = new StreamReader(csvPath)) // відкриваємо текстовий потік для читання CSV файлу
 using (var csv = new CsvReader(reader, config)) // створюємо CsvReader для читання CSV файлу
 {
+    // Додаємо конвертер для Category, щоб CsvHelper міг правильно перетворювати рядки у enum Category
+    csv.Context.TypeConverterCache.AddConverter<Category>(new EnumConverter(typeof(Category)));
     products = csv.GetRecords<Product>().ToList(); // зчитуємо всі записи з CSV і перетворюємо їх у список Product-ів (у пам'яті)
 }
 
@@ -59,7 +66,7 @@ void PrintAllProducts(SqlConnection connection)
     Console.WriteLine("All products:");
     foreach (var product in allProducts)
     {
-        Console.WriteLine($"{product.Id,3}: {product.Name,-20} {product.Price,-10}  ({product.Quantity})");
+        Console.WriteLine($"{product.Id,3}: {product.Name,-20} {product.Price,-10}  ({product.Quantity}) {product.Category}");
     }
 }
 

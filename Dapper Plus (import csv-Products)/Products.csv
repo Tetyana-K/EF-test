@@ -1,4 +1,4 @@
-name,price,quantity
-Book2,25.5,10
-Pencil2,1.1,200
-Ruler2,1.0,55
+name,price,quantity,category
+Book2,25.5,10, Books
+Pencil2,1.1,200, SchoolSupplies
+Ruler2,1.0,55, SchoolSupplies
