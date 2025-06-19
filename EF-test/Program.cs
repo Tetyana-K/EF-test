@@ -13,7 +13,7 @@ db.Users.Add(new User { Name = "Olena Bila", Email = "olena@gmail.com" });
 
 db.SaveChanges(); // зберегти зміни в базі даних
 
-var users = db.Users.ToList();
+var users = db.Users.Where(u=> u.Name.Contains('a')).ToList(); // selecct * from Users where Name like '%a%'
 foreach (var user in users)
 {
     Console.WriteLine($"Id: {user.Id}, Name: {user.Name}, Email : {user.Email}");
