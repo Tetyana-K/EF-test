@@ -1,7 +1,7 @@
 ﻿// See https://aka.ms/new-console-template for more information
 using Bogus;
 using DemoGenerateBogus;
-Console.WriteLine("Demo Bogus Generaten");
+Console.WriteLine("Demo Bogus Generate");
 
 Faker faker = new Faker();
 var number = faker.Random.Int(1, 100);
@@ -17,7 +17,8 @@ var user = new User
     Name = faker.Name.FullName(),
     Email = faker.Internet.Email(),
     Age = faker.Random.Int(18, 100),
-    Gender = faker.PickRandomParam(Gender.Male, Gender.Female)
+    //Gender = faker.PickRandomParam(Gender.Male, Gender.Female)
+    Gender = faker.PickRandom<Gender>()
 };//
 Console.WriteLine(user.Name);
 Console.WriteLine(user.Email);
@@ -25,14 +26,13 @@ Console.WriteLine(user.Age);
 Console.WriteLine(user.Gender);
 Console.WriteLine();
 
-Faker<User> fakerUser = new Faker<User>();
+Faker<User> fakerUser = new Faker<User>(); // створюємо екземпляр Faker для класу User
 fakerUser.RuleFor(u => u.Name, f => f.Name.FullName())
 .RuleFor(u => u.Email, f => f.Internet.Email())
 .RuleFor(u => u.Age, f => f.Random.Int(18, 100))
 .RuleFor(u => u.Gender, f => f.PickRandom<Gender>());
-//.RuleFor(u=>u.Gender, f => f.Random.Enum<Gender>())
 
-var fakerUserInstance = fakerUser.Generate();
+var fakerUserInstance = fakerUser.Generate(); // генеруємо один екземпляр User
 Console.WriteLine(fakerUserInstance.Name);
 Console.WriteLine(fakerUserInstance.Email);
 Console.WriteLine(fakerUserInstance.Age);

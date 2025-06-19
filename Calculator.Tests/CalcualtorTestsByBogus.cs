@@ -1,7 +1,7 @@
 using Bogus;
 // dotnet add package Bogus
 
-namespace Calculator.Tests
+namespace CalculatorNS.Tests
 {
     public class CalcualtorTestsByBogus
     {

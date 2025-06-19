@@ -1,5 +1,7 @@
-namespace Calculator.Tests
+using CalculatorNS;
+namespace CalculatorNS.Tests
 {
+    [TestFixture]
     public class CalcualtorTests
     {
         Calculator calculator;
@@ -47,7 +49,7 @@ namespace Calculator.Tests
             // Assert
             Assert.That(result, Is.EqualTo(20));
         }
-        [Test]
+        [Test] // тест на позитивний сценарій
         public void Calculator_Divide_ReturnsCorrectQuotient()
         {
             // Act
@@ -56,7 +58,7 @@ namespace Calculator.Tests
             // Assert
             Assert.That(result, Is.EqualTo(5));
         }
-        [Test]
+        [Test] // тест на негативний сценарій
         public void Calculator_Divide_ByZero_ThrowsDivideByZeroException()
         {
             // Arrange
@@ -64,7 +66,7 @@ namespace Calculator.Tests
 
 
             // Act & Assert
-            Assert.Throws<DivideByZeroException>( // assert.Throws - перевіряє, що кидається виняток
+            Assert.Throws<DivideByZeroException>( // assert.Throws - перевіряє, що кидається виняток типу DivideByZeroException
                 () => calculator.Divide(10, 0), // функція, яка спричиняє виключення
                 "Expected DivideByZeroException when dividing by zero"); // повідомлення, яке буде виведено, якщо виняток не буде викликано
         }
