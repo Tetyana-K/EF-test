@@ -10,6 +10,8 @@
 
   <ItemGroup>
     <PackageReference Include="bogus" Version="35.6.3" />
+    <PackageReference Include="csvhelper" Version="33.1.0" />
+    <PackageReference Include="dapper" Version="2.1.66" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.6">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
@@ -24,6 +26,8 @@
     <PackageReference Include="Microsoft.NET.Test.SDK" Version="17.14.1" />
     <PackageReference Include="NUnit" Version="4.3.2" />
     <PackageReference Include="NUnit3TestAdapter" Version="5.0.0" />
+    <PackageReference Include="system.data.sqlclient" Version="4.9.0" />
+    <PackageReference Include="z.dapper.plus" Version="7.6.1" />
   </ItemGroup>
 
 </Project>

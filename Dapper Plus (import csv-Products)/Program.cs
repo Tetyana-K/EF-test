@@ -44,7 +44,7 @@ using (var reader = new StreamReader(csvPath)) // відкриваємо тек�
 using (var csv = new CsvReader(reader, config)) // створюємо CsvReader для читання CSV файлу
 {
     // Додаємо конвертер для Category, щоб CsvHelper міг правильно перетворювати рядки у enum Category
-    csv.Context.TypeConverterCache.AddConverter<Category>(new EnumConverter(typeof(Category)));
+    csv.Context.TypeConverterCache.AddConverter<Category>(categoryConverter);// new EnumConverter(typeof(Category)));
     products = csv.GetRecords<Product>().ToList(); // зчитуємо всі записи з CSV і перетворюємо їх у список Product-ів (у пам'яті)
 }
 

@@ -9,7 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Z.Dapper.Plus" Version="7.6.0" />
+    <PackageReference Include="Z.Dapper.Plus" Version="7.6.1" />
   </ItemGroup>
 
   <ItemGroup>

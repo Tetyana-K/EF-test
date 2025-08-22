@@ -2,6 +2,7 @@
 using ComputerGameHome;
 
 Console.WriteLine("---Games------!");
+
 using var db = new GameDbContext();
 //db.Database.EnsureDeleted();
 db.Database.EnsureCreated();
