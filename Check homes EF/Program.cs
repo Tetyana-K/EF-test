@@ -1,132 +1,69 @@
+using Dapper;
+using DapperNew;
 using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
+using System.Data.SqlClient;
 using System.Linq;
-using CsvHelper;
-using CsvHelper.Configuration;
-using CsvHelper.TypeConversion;
+using Z.Dapper.Plus;
+
 using Dapper;
 using Z.Dapper.Plus;
 using Microsoft.Data.SqlClient;
+//string connectionString = "Server=(localdb)\\MSSQLLocalDB;Database=DapperPlus_Products;Trusted_Connection=True;";
 
-public enum Genre
-{
-    Fiction, NonFiction, Science, History, Fantasy, Mystery, Romance, Thriller, Dystopia
-}
 
-public class Book
+public class Product
 {
-    public int Id { get; set; }  // auto-increment
-    public string Title { get; set; } = "";
-    public string Author { get; set; } = "";
+    public int Id { get; set; }
+    public string Name { get; set; } = string.Empty;
     public decimal Price { get; set; }
-    public int PublishedYear { get; set; }
-    public Genre? Genre { get; set; }
+    public int Quantity { get; set; }
+    public string Category { get; set; } = string.Empty;
 }
 
 class Program
 {
-    const string connStr = "Server=(localdb)\\mssqllocaldb;Database=DapperPlusCSV;Trusted_Connection=True;TrustServerCertificate=True;";
-
-//    static void Main()
-//    {
-//        DapperPlusManager.Entity<Book>().Table("Books");
-
-//        var books = ImportCsv("../../../books.csv");
-
-//        using var connection = new SqlConnection(connStr);
-
-//        connection.BulkInsert(books);
-//        Console.WriteLine("Inserted:");
-//        PrintAll(connection);
-
-//        foreach (var b in books)
-//        {
-//            b.Price += 1;
-//            b.PublishedYear += 1;
-//        }
-//        connection.BulkUpdate(books);
-//        Console.WriteLine("Updated:");
-//        PrintAll(connection);
-
-//        var toDelete = books.Where(b => b.PublishedYear < 2000).ToList();
-//        connection.BulkDelete(toDelete);
-//        Console.WriteLine("Deleted < 2000:");
-//        PrintAll(connection);
-
-//        var mergeList = books.Where(b => b.Genre == Genre.Fantasy).Select(b =>
-//        {
-//            b.Price *= 0.8m;
-//            return b;
-//        }).ToList();
-
-//        mergeList.AddRange(new[]
-//        {
-//            new Book { Title = "New A", Author = "New Author A", Genre = Genre.Thriller, Price = 15, PublishedYear = 2023 },
-//            new Book { Title = "New B", Author = "New Author B", Genre = Genre.Mystery, Price = 17, PublishedYear = 2024 },
-//        });
-
-//        connection.BulkMerge(mergeList);
-//        Console.WriteLine("After Merge:");
-//        PrintAll(connection);
-//    }
-
-//    static List<Book> ImportCsv(string path)
-//    {
-//        using var reader = new StreamReader(path);
-//        var config = new CsvConfiguration(CultureInfo.InvariantCulture) { HeaderValidated = null, MissingFieldFound = null };
-//        using var csv = new CsvReader(reader, config);
-//        csv.Context.TypeConverterCache.AddConverter<Genre>(new EnumConverter(typeof(Genre)));
-//        return csv.GetRecords<Book>().ToList();
-//    }
-
-//    static void PrintAll(SqlConnection conn)
-//    {
-//        var books = conn.Query<Book>("SELECT * FROM Books").ToList();
-//        foreach (var b in books)
-//            Console.WriteLine($"{b.Title} by {b.Author} - {b.Genre} - {b.Price:C} ({b.PublishedYear})");
-//        Console.WriteLine();
-//    }
-//}
-
-
-
-//public enum Genre
-//{
-//    Fiction, NonFiction, Science, History, Fantasy, Mystery, Romance, Thriller, Dystopia
-//}
-
-//public class Book
-//{
-//    public int Id { get; set; }
-//    public string Title { get; set; } = "";
-//    public string Author { get; set; } = "";
-//    public decimal Price { get; set; }
-//    public int PublishedYear { get; set; }
-//    public Genre? Genre { get; set; }
-}
-
-class Program2
-{
-        const string connStr = "Server=(localdb)\\mssqllocaldb;Database=DapperPlusCSV;Trusted_Connection=True;TrustServerCertificate=True;";
-
-
-        //const string connStr = "Server=localhost;Database=Library;Trusted_Connection=True;TrustServerCertificate=True;";
-
     static void Main()
     {
-        using var conn = new SqlConnection(connStr);
-        var genreName = "Fantasy";
+        string connectionString = "Server=(localdb)\\MSSQLLocalDB;Database=DapperPlus_Products;Trusted_Connection=True;";
+        using var connection = new System.Data.SqlClient.SqlConnection(connectionString);
 
-        var books = conn.Query<Book>(
-            "GetBooksByGenre",
-            new { Genre = genreName },
-            commandType: System.Data.CommandType.StoredProcedure
-        ).ToList();
+        var products = new List<Product>
+        {
+            new Product { Name="Ручка", Price=10, Quantity=50, Category="Канцтовари" },
+            new Product { Name="Олівець", Price=5, Quantity=100, Category="Канцтовари" },
+            new Product { Name="Зошит", Price=25, Quantity=30, Category="Канцтовари" },
+            new Product { Name="Калькулятор", Price=150, Quantity=10, Category="Електроніка" },
+            new Product { Name="Чайник", Price=500, Quantity=5, Category="Побутова техніка" }
+        };
+        connection.BulkInsert(products);
+        var allProducts = connection.Query<Product>("SELECT * FROM Products").ToList();
+        Console.WriteLine("Після BulkInsert:");
+        allProducts.ForEach(p => Console.WriteLine($"{p.Id} {p.Name} {p.Price} {p.Quantity} {p.Category}"));
 
-        Console.WriteLine($"Books in genre {genreName}:");
-        foreach (var book in books)
-            Console.WriteLine($"{book.Title} by {book.Author} - {book.Price:C} ({book.PublishedYear})");
+        var updatedProducts = allProducts.Select(p =>
+        {
+            if (p.Name == "Ручка") p.Quantity += 20;
+            if (p.Name == "Чайник") p.Price = 450;
+            return p;
+        }).ToList();
+        connection.BulkUpdate(updatedProducts);
+        var afterUpdate = connection.Query<Product>("SELECT * FROM Products").ToList();
+        Console.WriteLine("Після BulkUpdate:");
+        afterUpdate.ForEach(p => Console.WriteLine($"{p.Id} {p.Name} {p.Price} {p.Quantity} {p.Category}"));
+
+        var toDelete = afterUpdate.Where(p => p.Quantity < 10).ToList();
+        connection.BulkDelete(toDelete);
+        var afterDelete = connection.Query<Product>("SELECT * FROM Products").ToList();
+        Console.WriteLine("Після BulkDelete:");
+        afterDelete.ForEach(p => Console.WriteLine($"{p.Id} {p.Name} {p.Price} {p.Quantity} {p.Category}"));
+
+        var stationery = afterDelete.Where(p => p.Category == "Канцтовари").ToList();
+        foreach (var s in stationery) s.Price *= 0.75m;
+        stationery.Add(new Product { Name = "Маркер", Price = 20, Quantity = 40, Category = "Канцтовари" });
+        stationery.Add(new Product { Name = "Папка", Price = 15, Quantity = 25, Category = "Канцтовари" });
+        connection.BulkMerge(stationery);
+        var afterMerge = connection.Query<Product>("SELECT * FROM Products").ToList();
+        Console.WriteLine("Після BulkMerge:");
+        afterMerge.ForEach(p => Console.WriteLine($"{p.Id} {p.Name} {p.Price} {p.Quantity} {p.Category}"));
     }
 }

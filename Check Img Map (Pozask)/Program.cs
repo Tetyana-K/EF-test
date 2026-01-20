@@ -1,7 +1,14 @@
 ﻿// See https://aka.ms/new-console-template for more information
+using System.Globalization;
+
 class Program {
     static void Main()
     {
+        TimeOnly r = new TimeOnly(5, 7);
+        var sectionScheduleTimeFrom = r.ToString(@"HH\:mm\:ss", CultureInfo.InvariantCulture);
+        Console.WriteLine(sectionScheduleTimeFrom);
+        return;
+
         Console.WriteLine("Hello, World!");
         var baseImageUrl = "https://example.com/images   /     ";
         var draft = new
